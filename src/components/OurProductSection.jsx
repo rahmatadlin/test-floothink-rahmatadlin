@@ -3,52 +3,78 @@ import React, { useState } from 'react';
 const products = [
   {
     name: 'Easyret',
-    image: 'https://images.unsplash.com/photo-1511174511562-5f97f4f877aa?auto=format&fit=crop&w=600&q=80',
-    desc: '',
+    image: '/easyret.png',
+    desc: 'Mi imperdiet fusce sed rhoncus sed vivamus. Lorem ipsum dolor sit amet consectetur.',
   },
   {
     name: 'Absolu',
-    image: 'https://images.unsplash.com/photo-1519494080410-f9aa8f52f1e1?auto=format&fit=crop&w=600&q=80',
+    image: '/absolu.png',
     desc: 'Lorem ipsum dolor sit amet consectetur. Mi imperdiet fusce sed rhoncus sed vivamus.',
   },
 ];
 
 const OurProductSection = () => {
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(1);
+  const [direction, setDirection] = useState(0);
+  const [animating, setAnimating] = useState(false);
 
-  const prev = () => setActive((prev) => (prev === 0 ? products.length - 1 : prev - 1));
-  const next = () => setActive((prev) => (prev === products.length - 1 ? 0 : prev + 1));
+  const prev = () => {
+    if (active > 0 && !animating) {
+      setDirection(-1);
+      setAnimating(true);
+      setTimeout(() => {
+        setActive((prev) => prev - 1);
+        setAnimating(false);
+      }, 350);
+    }
+  };
+
+  const next = () => {
+    if (active < products.length - 1 && !animating) {
+      setDirection(1);
+      setAnimating(true);
+      setTimeout(() => {
+        setActive((prev) => prev + 1);
+        setAnimating(false);
+      }, 350);
+    }
+  };
 
   return (
-    <section className="w-full flex flex-col md:flex-row items-center justify-center py-24 bg-white">
-      {/* Kiri: Teks */}
-      <div className="flex-1 flex flex-col justify-center pl-8 md:pl-24 max-w-xl">
+    <section id="product" className="w-full flex flex-col lg:flex-row items-center justify-center py-12 md:py-24 bg-white px-4 sm:px-6">
+      {/* Left: Text Content */}
+      <div className="flex-1 flex flex-col justify-center lg:pl-8 xl:pl-24 max-w-xl w-full mb-12 lg:mb-0">
         <div className="flex items-center gap-4 mb-2">
           <span className="h-px w-16 bg-[#3CA6B8]/30 inline-block align-middle" />
           <span className="text-[#3CA6B8] tracking-widest text-xs font-semibold uppercase">Our Product</span>
         </div>
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6 leading-tight">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 sm:mb-6 leading-tight">
           Innovative Products to Support Your Healthcare Services
         </h2>
-        <p className="text-gray-600 text-base md:text-lg mb-8">
+        <p className="text-gray-600 text-sm sm:text-base md:text-lg mb-6 sm:mb-8">
           Powered by the latest technology and built to the highest standards, our products help you deliver faster, safer, and more effective healthcare.
         </p>
-        <button className="flex items-center gap-2 px-8 py-3 bg-[#6CA6A9] hover:bg-[#5a8d8f] text-white rounded-full text-base font-medium transition group w-fit">
+        <button className="flex items-center gap-2 px-6 sm:px-8 py-2 sm:py-3 bg-[#6CA6A9] hover:bg-[#5a8d8f] text-white rounded-full text-sm sm:text-base font-medium transition group w-fit">
           View Product
           <span className="inline-block group-hover:translate-x-1 transition-transform">
-            <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
-              <path d="M5 10h10M13 8l2 2-2 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <img src="/arrow.png" alt="arrow" width="20" height="20" className="w-5 h-5 sm:w-7 sm:h-7" />
           </span>
         </button>
       </div>
-      {/* Kanan: Produk */}
-      <div className="flex-1 flex flex-col items-center justify-center gap-6 mt-12 md:mt-0">
-        <div className="flex gap-6">
+
+      {/* Right: Product Slider */}
+      <div className="flex-1 flex flex-col items-center justify-center gap-4 sm:gap-6 w-full max-w-2xl lg:max-w-none">
+        <div className="relative flex justify-center w-full h-[200px] sm:h-[250px] md:h-[280px]">
           {products.map((p, idx) => (
             <div
               key={p.name}
-              className="relative w-[320px] h-[280px] rounded-xl overflow-hidden shadow-lg group"
+              className={`absolute w-[280px] sm:w-[300px] md:w-[320px] h-full rounded-xl overflow-hidden shadow-lg group transition-all duration-500 ease-in-out
+                ${idx === active ? 'z-10 scale-100 opacity-100' : 'z-0 scale-90 opacity-70'}
+                ${animating && idx === active && direction === -1 ? '-translate-x-16 sm:-translate-x-24 opacity-0' : ''}
+                ${animating && idx === active && direction === 1 ? 'translate-x-16 sm:translate-x-24 opacity-0' : ''}
+                ${animating && idx !== active && direction === -1 && idx === active + 1 ? 'translate-x-0 opacity-100' : ''}
+                ${animating && idx !== active && direction === 1 && idx === active - 1 ? 'translate-x-0 opacity-100' : ''}
+              `}
               style={{ background: '#F6F8FC' }}
             >
               <img
@@ -56,43 +82,54 @@ const OurProductSection = () => {
                 alt={p.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute left-0 bottom-0 p-6 text-white text-lg font-medium" style={{textShadow:'0 2px 8px rgba(0,0,0,0.3)'}}>
-                {p.name}
-              </div>
-              <button
-                className="absolute right-4 bottom-4 w-10 h-10 rounded-full border border-white flex items-center justify-center text-white text-xl bg-white/20 hover:bg-white/40 transition"
-                aria-label="View"
-              >
-                <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
-                  <path d="M5 10h10M13 8l2 2-2 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
+              {idx === active && (
+                <>
+                  <div className="absolute left-0 bottom-0 p-4 sm:p-6 text-white text-base sm:text-lg font-medium" style={{textShadow:'0 2px 8px rgba(0,0,0,0.3)'}}>
+                    {p.name}
+                  </div>
+                  <button
+                    className="absolute right-3 sm:right-4 bottom-3 sm:bottom-4 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-white text-xl transition group"
+                    aria-label="View"
+                  >
+                    <img src="/left-arrow.png" alt="arrow" width="16" height="16" className="w-4 h-4 sm:w-5 sm:h-5" style={{ transform: 'rotate(135deg)' }} />
+                  </button>
+                </>
+              )}
             </div>
           ))}
         </div>
-        {/* Deskripsi & Navigasi */}
-        <div className="flex items-center gap-6 w-full max-w-[320px] mt-2">
-          <div className="flex-1 text-gray-600 text-base">
-            {products[1].desc}
+
+        {/* Description & Navigation */}
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-md lg:max-w-2xl px-4">
+          <div className="flex-1 text-gray-600 text-sm sm:text-base transition-opacity duration-500 text-center sm:text-left">
+            {products[active].desc}
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-1 sm:gap-2">
             <button
               onClick={prev}
-              className="w-10 h-10 rounded-full border border-[#6CA6A9] flex items-center justify-center text-[#6CA6A9] text-xl bg-white hover:bg-[#F6F8FC] transition"
+              className={`w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 flex items-center justify-center text-[#6CA6A9] text-xl bg-white transition ${active === 0 || animating ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#F6F8FC]'}`}
               aria-label="Previous"
+              disabled={active === 0 || animating}
             >
-              <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
-                <path d="M13 16l-4-4 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <img 
+                src="/left-arrow.png" 
+                alt="left arrow" 
+                className="w-5 h-5 sm:w-7 sm:h-7" 
+                style={{ filter: 'invert(54%) sepia(17%) saturate(747%) hue-rotate(142deg) brightness(92%) contrast(88%)' }} 
+              />
             </button>
             <button
               onClick={next}
-              className="w-10 h-10 rounded-full border border-[#6CA6A9] flex items-center justify-center text-[#6CA6A9] text-xl bg-white hover:bg-[#F6F8FC] transition"
+              className={`w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 flex items-center justify-center text-[#6CA6B8] text-xl bg-white transition ${active === products.length - 1 || animating ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#F6F8FC]'}`}
               aria-label="Next"
+              disabled={active === products.length - 1 || animating}
             >
-              <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
-                <path d="M7 16l4-4-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <img 
+                src="/left-arrow.png" 
+                alt="right arrow" 
+                className="w-5 h-5 sm:w-7 sm:h-7" 
+                style={{ filter: 'invert(54%) sepia(17%) saturate(747%) hue-rotate(142deg) brightness(92%) contrast(88%)', transform: 'rotate(180deg)' }} 
+              />
             </button>
           </div>
         </div>
@@ -101,4 +138,4 @@ const OurProductSection = () => {
   );
 };
 
-export default OurProductSection; 
+export default OurProductSection;

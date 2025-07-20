@@ -37,7 +37,7 @@ const ProductCategorySlider = () => {
   };
 
   return (
-    <div className="relative w-full h-[450px] flex items-center justify-start overflow-hidden mt-12">
+    <div id="about" className="relative w-full h-[300px] sm:h-[350px] md:h-[450px] flex items-center justify-start overflow-hidden mt-8 sm:mt-12">
       {/* Background image */}
       <img
         src={slides[current].image}
@@ -47,36 +47,40 @@ const ProductCategorySlider = () => {
       {/* Overlay */}
       <div className="absolute inset-0 bg-[#003A5D]/70 z-10" />
       {/* Content */}
-      <div className="relative z-20 flex flex-col justify-center h-full pl-24 max-w-3xl items-start">
-        <div className="mb-2 text-white text-sm tracking-widest font-light flex items-center gap-4">
-          <span className="h-px w-8 bg-white/50 inline-block align-middle" />
+      <div className="relative z-20 flex flex-col justify-center h-full px-6 sm:pl-12 md:pl-24 max-w-3xl items-start">
+        <div className="mb-1 sm:mb-2 text-white text-xs sm:text-sm tracking-widest font-light flex items-center gap-2 sm:gap-4">
+          <span className="h-px w-4 sm:w-8 bg-white/50 inline-block align-middle" />
           CATEGORY
         </div>
-        <h2 className={`text-white text-4xl md:text-5xl font-bold mb-4 transition-opacity duration-300 ${fade ? 'opacity-0' : 'opacity-100'}`}>{slides[current].category}</h2>
-        <p className={`text-white/90 text-base md:text-lg mb-8 max-w-xl transition-opacity duration-300 ${fade ? 'opacity-0' : 'opacity-100'}`}>{slides[current].description}</p>
+        <h2 className={`text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4 transition-opacity duration-300 ${fade ? 'opacity-0' : 'opacity-100'}`}>
+          {slides[current].category}
+        </h2>
+        <p className={`text-white/90 text-sm sm:text-base md:text-lg mb-4 sm:mb-8 max-w-md sm:max-w-xl transition-opacity duration-300 ${fade ? 'opacity-0' : 'opacity-100'}`}>
+          {slides[current].description}
+        </p>
         {/* Navigation */}
-        <div className="flex gap-4 mt-2">
+        <div className="flex gap-2 sm:gap-4 mt-1 sm:mt-2">
           <button
             onClick={prevSlide}
             className="hover:bg-white/20 transition p-0 bg-transparent"
             aria-label="Previous"
           >
-            <img src="/left-arrow.png" alt="Previous" className="w-12 h-12" />
+            <img src="/left-arrow.png" alt="Previous" className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12" />
           </button>
           <button
             onClick={nextSlide}
             className="hover:bg-white/20 transition p-0 bg-transparent"
             aria-label="Next"
           >
-            <img src="/left-arrow.png" alt="Next" className="w-12 h-12 rotate-180" />
+            <img src="/left-arrow.png" alt="Next" className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rotate-180" />
           </button>
         </div>
         {/* Dots */}
-        <div className="flex gap-2 mt-8">
+        <div className="flex gap-1 sm:gap-2 mt-4 sm:mt-8">
           {slides.map((_, idx) => (
             <span
               key={idx}
-              className={`w-3 h-3 rounded-full border border-white ${idx === current ? 'bg-white' : 'bg-transparent'}`}
+              className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full border border-white ${idx === current ? 'bg-white' : 'bg-transparent'}`}
             />
           ))}
         </div>
@@ -85,4 +89,4 @@ const ProductCategorySlider = () => {
   );
 };
 
-export default ProductCategorySlider; 
+export default ProductCategorySlider;
